@@ -1074,6 +1074,46 @@
   }, { passive:true });
 
   // ==========================================================
+  // A0-bis. Si entran al About haciendo clic en "About" del menú
+  //    (en vez de bajar con el scroll desde el Inicio), los
+  //    llevamos directo al final del efecto, con el texto ya
+  //    completamente iluminado — no tiene sentido que aparezca
+  //    todo apagado si vinieron directo desde el menú. Esto solo
+  //    aplica en pantallas grandes, donde existe el efecto sticky;
+  //    en celular el link funciona como un ancla normal.
+  //
+  //    Cubre DOS casos:
+  //    (a) Ya estás en Inicio y clickeás "About" (mismo documento,
+  //        no recarga la página: lo maneja el "click" de abajo).
+  //    (b) Estás en otra página (Work, o una ficha de proyecto) y
+  //        clickeás "About": eso navega a "index.html#about", o
+  //        sea que Inicio se carga de cero. Ese caso lo maneja el
+  //        "load" de más abajo, mirando el hash de la URL.
+  // ==========================================================
+  function irAAboutIluminado(comportamiento){
+    const distanciaTotal = aboutSeccion.offsetHeight - window.innerHeight;
+    const destino = distanciaTotal > 0
+      ? aboutSeccion.offsetTop + distanciaTotal
+      : aboutSeccion.offsetTop;
+    window.scrollTo({ top: destino, behavior: comportamiento });
+  }
+
+  document.querySelectorAll('a[href="#about"], a[href="index.html#about"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const hayEfectoSticky = window.matchMedia('(min-width: 761px)').matches;
+      if (!hayEfectoSticky) return;
+      e.preventDefault();
+      irAAboutIluminado('smooth');
+    });
+  });
+
+  window.addEventListener('load', () => {
+    if (location.hash === '#about' && window.matchMedia('(min-width: 761px)').matches) {
+      requestAnimationFrame(() => irAAboutIluminado('auto'));
+    }
+  });
+
+  // ==========================================================
   // A1. Medimos la altura real de la franja roja del footer
   //     (donde vive "¡Hablemos!") y la guardamos en una variable
   //     CSS. La foto de Contacto la usa para saber exactamente
