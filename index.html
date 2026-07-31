@@ -712,6 +712,13 @@
        en vez de ir iluminándose palabra por palabra con el scroll
        (ese efecto queda solo para pantallas más grandes). */
     .about-blurb .word{ transition:none; opacity:1; }
+    /* Tampoco queremos el "scroll-jacking" (la sección de 250vh con
+       el texto sticky reteniendo el scroll): en celular eso se
+       siente como que cuesta bajar. Pasa a ser una sección normal,
+       de alto automático, sin sticky. */
+    .about-blurb{ min-height:auto; position:static; padding-top:48px; padding-bottom:48px; }
+    .about-inner{ position:static; min-height:auto; }
+    .back-to-top{ display:none; }
     .hero-headline{ grid-template-columns: 1fr; row-gap: 0.15em; }
     .hh-cada,.hh-diseno,.hh-merece,.hh-su,.hh-lenguaje,.hh-propio{ grid-column:1; }
     .hh-cada{ grid-row:1; } .hh-diseno{ grid-row:2; }
